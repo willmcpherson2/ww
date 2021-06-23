@@ -13,4 +13,7 @@ web = [
 
 [dependencies]
 bevy = { version = "0.5.0", default-features = false, features = ["bevy_winit", "render"] }
-bevy_webgl2 = { version = "0.5.0", optional = true }
+bevy_webgl2 = { version = "0.5.2", optional = true }
+
+[profile.dev.package."*"]
+opt-level = 3
