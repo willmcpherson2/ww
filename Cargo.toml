@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2018"
 
 [features]
+dev = [
+    "bevy/bevy_wgpu",
+    "bevy/dynamic",
+]
 native = [
     "bevy/bevy_wgpu",
 ]
