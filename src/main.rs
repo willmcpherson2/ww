@@ -31,7 +31,9 @@ fn main() {
     #[cfg(target_arch = "wasm32")]
     app.add_plugin(bevy_webgl2::WebGL2Plugin);
     app.add_startup_system(setup.system());
-    app.add_system(input.system());
+    app.add_system(exit.system());
+    app.add_system(movement.system());
+    app.add_system(look.system());
     app.run();
 }
 
@@ -65,29 +67,18 @@ fn setup(
     });
 }
 
-fn input(
+fn exit(keyboard: Res<Input<KeyCode>>, mut exit: EventWriter<AppExit>) {
+    if keyboard.pressed(KeyCode::Escape) {
+        exit.send(AppExit);
+    }
+}
+
+fn movement(
     time: Res<Time>,
     keyboard: Res<Input<KeyCode>>,
-    mut motion: EventReader<MouseMotion>,
-    mut query: Query<(&mut Transform, &mut Orientation), With<Camera>>,
-    mut exit: EventWriter<AppExit>,
+    mut query: Query<(&mut Transform, &Orientation), With<Camera>>,
 ) {
-    let (mut transform, mut orientation) = query.single_mut().unwrap();
-
-    let delta = time.delta_seconds() * MOUSE_SENSITIVITY;
-
-    for event in motion.iter() {
-        let delta_x = -event.delta.x * delta;
-        let delta_y = -event.delta.y * delta;
-
-        let rot_y = Quat::from_axis_angle(Vec3::Y, delta_x);
-        orientation.rotate(rot_y);
-
-        let rot_x = Quat::from_axis_angle(orientation.x, delta_y);
-        orientation.rotate(rot_x);
-
-        transform.rotation = Quat::from(*orientation);
-    }
+    let (mut transform, orientation) = query.single_mut().unwrap();
 
     let delta = time.delta_seconds() * MOVEMENT_SPEED;
     let z = orientation.z;
@@ -105,8 +96,27 @@ fn input(
     if keyboard.pressed(KeyCode::D) {
         transform.translation += x * delta;
     }
+}
 
-    if keyboard.pressed(KeyCode::Escape) {
-        exit.send(AppExit);
+fn look(
+    time: Res<Time>,
+    mut motion: EventReader<MouseMotion>,
+    mut query: Query<(&mut Transform, &mut Orientation), With<Camera>>,
+) {
+    let (mut transform, mut orientation) = query.single_mut().unwrap();
+
+    let delta = time.delta_seconds() * MOUSE_SENSITIVITY;
+
+    for event in motion.iter() {
+        let delta_x = -event.delta.x * delta;
+        let delta_y = -event.delta.y * delta;
+
+        let rot_y = Quat::from_axis_angle(Vec3::Y, delta_x);
+        orientation.rotate(rot_y);
+
+        let rot_x = Quat::from_axis_angle(orientation.x, delta_y);
+        orientation.rotate(rot_x);
+
+        transform.rotation = Quat::from(*orientation);
     }
 }
