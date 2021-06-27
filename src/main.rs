@@ -81,7 +81,7 @@ fn movement(
     let (mut transform, orientation) = query.single_mut().unwrap();
 
     let delta = time.delta_seconds() * MOVEMENT_SPEED;
-    let z = orientation.z;
+    let z = Vec3::new(orientation.z.x, 0.0, orientation.z.z);
     let x = orientation.x;
 
     if keyboard.pressed(KeyCode::W) {
