@@ -1,0 +1,47 @@
+[tasks.dev-web]
+run_task = { name = ["serve", "watch-web"], parallel = true }
+
+[tasks.dev-native]
+run_task = { name = ["watch-native"] }
+
+[tasks.serve]
+command = "basic-http-server"
+args = ["static"]
+dependencies = ["install-basic-http-server"]
+
+[tasks.watch-web]
+run_task = { name = ["wasm-bindgen", "open"] }
+watch = { watch = ["./src/"] }
+
+[tasks.watch-native]
+run_task = { name = ["run-native"] }
+watch = { watch = ["./src/"] }
+
+[tasks.open]
+command = "open"
+args = ["-g", "http://127.0.0.1:4000"]
+
+[tasks.wasm-bindgen]
+command = "wasm-bindgen"
+args = ["--out-dir", "static", "--target", "web", "--no-typescript", "target/wasm32-unknown-unknown/debug/ww.wasm"]
+dependencies = ["install-wasm-bindgen-cli", "build-web"]
+
+[tasks.build-web]
+command = "cargo"
+args = ["build", "--target", "wasm32-unknown-unknown", "--features=web-dev"]
+dependencies = ["install-wasm32-unknown-unknown"]
+
+[tasks.run-native]
+command = "cargo"
+args = ["run", "--features=native-dev"]
+
+[tasks.install-basic-http-server]
+install_crate = { crate_name = "basic-http-server", binary = "basic-http-server", test_arg = "--help" }
+
+[tasks.install-wasm-bindgen-cli]
+command = "cargo"
+args = ["install", "wasm-bindgen-cli", "--version", "0.2.69", "--locked"]
+
+[tasks.install-wasm32-unknown-unknown]
+command = "rustup"
+args = ["target", "install", "wasm32-unknown-unknown"]

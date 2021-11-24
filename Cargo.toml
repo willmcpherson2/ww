@@ -1,15 +1,18 @@
 [package]
 name = "ww"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 
 [features]
-dev = [
+native-dev = [
     "bevy/bevy_wgpu",
     "bevy/dynamic",
 ]
 native = [
     "bevy/bevy_wgpu",
+]
+web-dev = [
+    "bevy_webgl2",
 ]
 web = [
     "bevy_webgl2",
