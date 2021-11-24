@@ -107,16 +107,15 @@ fn look(
 
     let delta = time.delta_seconds() * MOUSE_SENSITIVITY;
 
-    for event in motion.iter() {
-        let delta_x = -event.delta.x * delta;
-        let delta_y = -event.delta.y * delta;
+    let (delta_x, delta_y) = motion.iter().fold((0.0, 0.0), |(x, y), event| {
+        (x - event.delta.x * delta, y - event.delta.y * delta)
+    });
 
-        let rot_y = Quat::from_axis_angle(Vec3::Y, delta_x);
-        orientation.rotate(rot_y);
+    let rot_y = Quat::from_axis_angle(Vec3::Y, delta_x);
+    orientation.rotate(rot_y);
 
-        let rot_x = Quat::from_axis_angle(orientation.x, delta_y);
-        orientation.rotate(rot_x);
+    let rot_x = Quat::from_axis_angle(orientation.x, delta_y);
+    orientation.rotate(rot_x);
 
-        transform.rotation = Quat::from(*orientation);
-    }
+    transform.rotation = Quat::from(*orientation);
 }
