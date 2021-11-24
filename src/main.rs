@@ -76,13 +76,13 @@ fn exit(keyboard: Res<Input<KeyCode>>, mut exit: EventWriter<AppExit>) {
 fn movement(
     time: Res<Time>,
     keyboard: Res<Input<KeyCode>>,
-    mut query: Query<(&mut Transform, &Orientation), With<Camera>>,
+    mut query: Query<&mut Transform, With<Camera>>,
 ) {
-    let (mut transform, orientation) = query.single_mut().unwrap();
+    let mut transform = query.single_mut().unwrap();
 
     let delta = time.delta_seconds() * MOVEMENT_SPEED;
-    let z = Vec3::new(orientation.z.x, 0.0, orientation.z.z);
-    let x = orientation.x;
+    let z = Vec3::new(transform.local_z().x, 0.0, transform.local_z().z);
+    let x = transform.local_x();
 
     if keyboard.pressed(KeyCode::W) {
         transform.translation -= z * delta;
