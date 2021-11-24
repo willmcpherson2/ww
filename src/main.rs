@@ -111,11 +111,17 @@ fn look(
         (x - event.delta.x * delta, y - event.delta.y * delta)
     });
 
+    let old_orientation = *orientation;
+
     let rot_y = Quat::from_axis_angle(Vec3::Y, delta_x);
     orientation.rotate(rot_y);
 
     let rot_x = Quat::from_axis_angle(orientation.x, delta_y);
     orientation.rotate(rot_x);
+
+    if orientation.z.y > 0.9 || orientation.z.y < -0.9 {
+        *orientation = old_orientation;
+    }
 
     transform.rotation = Quat::from(*orientation);
 }
