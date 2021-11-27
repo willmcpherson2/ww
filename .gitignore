@@ -2,6 +2,7 @@
 */*
 
 !.gitignore
+!.gitattributes
 !Cargo.lock
 !Cargo.toml
 !Makefile.toml
@@ -9,3 +10,8 @@
 !src/**
 !static
 !static/index.html
+!static/assets
+!assets
+!assets/**
+!blender
+!blender/**
