@@ -10,8 +10,6 @@ struct Camera;
 
 struct Light;
 
-struct Cube;
-
 const MOVEMENT_SPEED: f32 = 2.0;
 const MOUSE_SENSITIVITY: f32 = 0.2;
 
@@ -37,11 +35,7 @@ fn main() {
     app.run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn()
         .insert(Camera)
@@ -59,12 +53,7 @@ fn setup(
         ..Default::default()
     });
 
-    commands.spawn().insert(Cube).insert_bundle(PbrBundle {
-        transform: Transform::from_translation(Vec3::new(0.0, 0.0, -5.0)),
-        mesh: meshes.add(Mesh::from(shape::Cube::default())),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-        ..Default::default()
-    });
+    commands.spawn_scene(asset_server.load("cube.gltf#Scene0"));
 }
 
 fn exit(keyboard: Res<Input<KeyCode>>, mut exit: EventWriter<AppExit>) {

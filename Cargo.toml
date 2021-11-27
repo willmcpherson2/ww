@@ -19,7 +19,7 @@ web = [
 ]
 
 [dependencies]
-bevy = { version = "0.5.0", default-features = false, features = ["bevy_winit", "render"] }
+bevy = { version = "0.5.0", default-features = false, features = ["bevy_winit", "render", "bevy_gltf"] }
 bevy_webgl2 = { version = "0.5.2", optional = true }
 
 [profile.dev.package."*"]
